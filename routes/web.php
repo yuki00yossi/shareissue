@@ -49,5 +49,6 @@ Route::post('/projects/{project}/member/add', [ProjectController::class, 'storeM
 
 Route::get('/issues/create', [IssueController::class, 'create'])->middleware('auth')->name('issues.create');
 Route::post('/issues', [IssueController::class, 'store'])->middleware('auth')->name('issues.store');
+Route::get('/issues/{issue}', [IssueController::class, 'show'])->middleware('auth')->name('issues.show');
 
 require __DIR__.'/auth.php';

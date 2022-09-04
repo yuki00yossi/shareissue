@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Issue;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class IssueController extends Controller
 {
+    const STATUS = [
+        0=> '未検討',
+        1=> '検討中',
+        2=> '対応中',
+        3=> '対応済み',
+        4=> '対応なし',
+        5=> '連携済み',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +26,16 @@ class IssueController extends Controller
     public function index()
     {
         //
-        $issues = Issue::where('status', '<>', 4)
+        $usre = Auth::user();
+        $belong_projects = array();
+        foreach (Auth::user()->projects as $project) {
+            $belong_projects[] = $project->id;
+        }
+        $issues = Issue::whereIn('project_id', $belong_projects)
+            ->where('status', '<>', 4)
             ->where('status', '<>', 5)->get();
-        return view('dashboard', ['issues'=> $issues]);
+
+        return view('dashboard', ['issues'=> $issues, 'status'=> $this::STATUS]);
     }
 
     /**
@@ -31,16 +47,11 @@ class IssueController extends Controller
     {
         //
         $users = User::all();
+        $projects = Project::whereRelation('users', 'user_id', Auth::id())->get();
         $param = [
             'users'=> $users,
-            'status'=> [
-                0=> '未検討',
-                1=> '検討中',
-                2=> '対応中',
-                3=> '対応済み',
-                4=> '対応なし',
-                5=> '連携済み',
-            ],
+            'status'=> $this::STATUS,
+            'projects'=> $projects,
         ];
         return view('issues.create', $param);
     }
@@ -73,8 +84,9 @@ class IssueController extends Controller
             'responsible_user_id'=> $resopnsible_user,
             'timelimit'=> $request->timelimit,
             'status'=> $request->status,
+            'project_id'=> $request->project,
         ]);
-        dd($result);
+        return redirect(route('dashboard'))->with('added', 'Issueを登録しました。');
         
     }
 
@@ -87,6 +99,7 @@ class IssueController extends Controller
     public function show(Issue $issue)
     {
         //
+        return view('issues.show', ['issue'=> $issue, 'status'=> $this::STATUS[$issue->status]]);
     }
 
     /**

@@ -43,6 +43,17 @@
                 <x-label for="timelimit" :value="__('期限')" />
                 <x-input id="timelimit" class="block mt-1 w-full" type="datetime-local" name="timelimit" :value="old('timelimit')"/>
             </div>
+            <!-- プロジェクト -->
+            <div class="mb-5">
+                <x-label for="project" :value="__('プロジェクト')" />
+                <select name="project" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    @forelse($projects as $value)
+                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                    @empty
+                        <option></option>
+                    @endforelse
+                </select>
+            </div>
             <div class="mt-3">
                 <x-button>
                     {{ __('Add') }}
