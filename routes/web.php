@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ProjectController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,5 +35,13 @@ Route::put('/departments/{department}', [DepartmentController::class, 'update'])
 Route::get('/departments/{department}/member/add', [DepartmentController::class, 'addMember'])->middleware('auth')->name('departments.addMember');
 Route::post('/departments/{department}/member/add', [DepartmentController::class, 'storeMember'])->middleware('auth')->name('departments.storeMember');
 
+Route::get('/projects', [ProjectController::class, 'index'])->middleware('auth')->name('projects.index');
+Route::get('/projects/create', [ProjectController::class, 'create'])->middleware('auth')->name('projects.create');
+Route::post('/projects', [ProjectController::class, 'store'])->middleware('auth')->name('projects.store');
+Route::get('/projects/{project}', [ProjectController::class, 'show'])->middleware('auth')->name('projects.show');
+Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->middleware('auth')->name('projects.edit');
+Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('auth')->name('projects.update');
+Route::get('/projects/{project}/member/add', [ProjectController::class, 'addMember'])->middleware('auth')->name('projects.addMember');
+Route::post('/projects/{project}/member/add', [ProjectController::class, 'storeMember'])->middleware('auth')->name('projects.storeMember');
 
 require __DIR__.'/auth.php';

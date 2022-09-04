@@ -120,7 +120,6 @@ class DepartmentController extends Controller
     {
         //
         $depart = Department::find($department);
-        $users = DepartmentUser::where('department_id', '<>', $depart[0]->id);
         $users = User::all();
         return view('departments.add-member', ['department'=> $depart, 'users'=> $users]);
     }
