@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('responsible_user_id')->cnstrained('users')->nullable();
             $table->datetime('timelimit')->nullable();
             $table->integer('status');
+            $table->foreignId('project_id')->cnstrained();
             $table->timestamps();
         });
     }
