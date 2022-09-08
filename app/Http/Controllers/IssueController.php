@@ -99,7 +99,7 @@ class IssueController extends Controller
     public function show(Issue $issue)
     {
         //
-        return view('issues.show', ['issue'=> $issue, 'status'=> $this::STATUS[$issue->status]]);
+        return view('issues.show', ['issue'=> $issue, 'status'=> $this::STATUS]);
     }
 
     /**

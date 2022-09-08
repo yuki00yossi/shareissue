@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add New Issue') }}
+            {{ __('Issue詳細') }}
         </h2>
     </x-slot>
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -23,7 +23,14 @@
             <div class="mb-5">
                 <x-label for="status" :value="__('ステータス')" />
                 <select name="status" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option>{{ $status }}</option>
+                    @foreach($status as $key=> $value)
+                        @if($key === $issue->status)
+                        {{-- selectedを付与するためのif --}}
+                        <option value="{{ $key }}" selected>{{ $value }}</option>
+                        @else
+                        <option value="{{ $key }}">{{ $value }}</option>
+                        @endif
+                    @endforeach
                 </select>
             </div>
             <!-- 担当者 -->
