@@ -62,7 +62,7 @@
                     <div class="grid grid-cols-12 gap-4 p-3 border-b-2 border-indigo-500">
                         <div class="col-span-4">タイトル</div>
                         <div class="col-span-2">プロジェクト</div>
-                        <div class="col-span-2">登録者</div>
+                        <div class="col-span-2">担当者</div>
                         <div class="col-span-2">期限</div>
                         <div class="col-span-2">ステータス</div>
                     </div>
