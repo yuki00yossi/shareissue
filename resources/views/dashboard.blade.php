@@ -20,15 +20,45 @@
             </div>
         @endif
     </x-slot>
+    <form id="searchForm" style="display: none;" method="get" action="{{ route('dashboard') }}"></form>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-xl">Issue List</h3>
-                    <div class="my-3 mb-5">
+                    <div class="my-3 mb-6">
                         <a href="{{ route('issues.create') }}" class="bg-blue-400 hover:bg-blue-300 text-white rounded px-4 py-2 mb-3">{{ __('Add Issue') }}</a>
                     </div>
+                    <p>検索条件で絞り込む</p>
+                    <div class="grid grid-cols-12">
+                        <div class="col-span-3">プロジェクト</div>
+                    </div>
+                    <form action="{{ route('dashboard') }}" method="GET">
+                    <div class="grid grid-cols-12">   
+                        <div class="col-span-3">
+                            <select name="projectId" class="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="0">--</option>
+                                @forelse($projects as $project)
+                                    @if(array_key_exists('projectId', $queries))
+                                    {{-- プロジェクト検索時にオプションにselected属性を付与 --}}
+                                        @if($project->id == $queries['projectId'])
+                                        <option value="{{ $project->id }}" selected>{{ $project->name }}</option>
+                                        @else
+                                        <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                        @endif
+                                    @else 
+                                    <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                    @endif
+                                @empty
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <input type="submit" id="searchSubmit" onclick="searchSubmit" class="bg-blue-400 hover:bg-blue-300 text-white rounded px-4 py-2 mb-3" value="検索">
+                        </div>
+                    </div>
+</form>
                     <div class="grid grid-cols-12 gap-4 p-3 border-b-2 border-indigo-500">
                         <div class="col-span-4">タイトル</div>
                         <div class="col-span-2">プロジェクト</div>
@@ -59,5 +89,10 @@
                 document.getElementById('alertArea').style = 'display: none;';
             });
         }
+
+        const searchSubmitBtn = document.getElementById('searchSubmit');
+        searchSubmitBtn.addEventListener('click', ()=> {
+            
+        })
     </script>
 </x-app-layout>

@@ -23,19 +23,40 @@ class IssueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $usre = Auth::user();
-        $belong_projects = array();
-        foreach (Auth::user()->projects as $project) {
-            $belong_projects[] = $project->id;
-        }
-        $issues = Issue::whereIn('project_id', $belong_projects)
-            ->where('status', '<>', 4)
-            ->where('status', '<>', 5)->get();
+        $validated_query = $request->validate([
+            'projectId'=> ['integer'],
+        ]);
+        $user = Auth::user();
+        $projects = array();
+        $queries = array();
+        if ($validated_query) {
+            if (array_key_exists('projectId', $validated_query)) {
+                if($user->projects->contains($validated_query['projectId'])) {
+                    $projects[] = $validated_query['projectId'];
+                    $queries['projectId'] = $validated_query['projectId'];
+                }
+                else {
+                    $projects = self::get_project_id_array($user->projects);
+                }
+            }
 
-        return view('dashboard', ['issues'=> $issues, 'status'=> $this::STATUS]);
+        }
+        else {
+            $projects = self::get_project_id_array($user->projects);
+        }
+        $issues = Issue::whereIn('project_id', $projects)
+                ->where('status', '<>', 4)
+                ->where('status', '<>', 5)->get();
+
+        return view('dashboard', [
+            'issues'=> $issues, 
+            'status'=> $this::STATUS,
+            'projects'=> $user->projects,
+            'queries'=> $queries,
+        ]);
     }
 
     /**
@@ -134,5 +155,20 @@ class IssueController extends Controller
     public function destroy(Issue $issue)
     {
         //
+    }
+
+    /**
+     * ユーザーのprojectsコレクションをproject idのみ格納した配列に変換する
+     * 
+     * @param \Illuminate\Database\Eloquent\Collection $collection
+     * @return array
+     */
+
+    public static function get_project_id_array($collection) {
+        $return_array = array();
+        foreach ($collection as $project) {
+            $return_array[] = $project->id;
+        }
+        return $return_array;
     }
 }
